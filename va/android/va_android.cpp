@@ -39,10 +39,12 @@
 #include <fcntl.h>
 #include <dlfcn.h>
 #include <errno.h>
+#include <cutils/properties.h>
 
 
 #define CHECK_SYMBOL(func) { if (!func) printf("func %s not found\n", #func); return VA_STATUS_ERROR_UNKNOWN; }
-#define DEVICE_NAME "/dev/dri/renderD128"
+//#define DEVICE_NAME "/dev/dri/renderD128"
+#define TARGET_DEVICE_IDX_PROP_NAME "ro.acg.rnode"
 
 static int open_device (char *dev_name)
 {
@@ -105,11 +107,17 @@ static VAStatus va_DisplayContextGetNumCandidates(
     int *num_candidates
 )
 {
+    char target_device_idx[PROPERTY_VALUE_MAX];
+    char target_device_path[128];
     VADriverContextP const ctx = pDisplayContext->pDriverContext;
     struct drm_state * drm_state = (struct drm_state *)ctx->drm_state;
 
     memset(drm_state, 0, sizeof(*drm_state));
-    drm_state->fd = open_device((char *)DEVICE_NAME);
+//    drm_state->fd = open_device((char *)DEVICE_NAME);
+    property_get(TARGET_DEVICE_IDX_PROP_NAME, target_device_idx, 0);
+    snprintf(target_device_path, sizeof(target_device_path), "/dev/dri/renderD%d", atoi(target_device_idx) + 128);
+    target_device_path[sizeof(target_device_path) - 1] = '\0';
+    drm_state->fd = open_device(target_device_path);
 
     if (drm_state->fd < 0) {
         fprintf(stderr,"can't open DRM devices\n");
