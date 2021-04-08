@@ -36,3 +36,29 @@ address to our [Slack Team invite page](https://slack-join-intel-media.herokuapp
 
 Slack complements our other means of communication.  Pick the one that works
 best for you!
+
+## Build steps
+
+Get sources with the following Git* command:
+
+```sh
+git clone https://github.com/VCDP/libva.git
+cd libva
+```
+
+Check out intel-media-sg1 branch or intel-media-sg1-pv* tag.
+
+Run the following commands to build and install libva:
+
+```sh
+./autogen.sh
+make -j $(nproc)
+sudo make install
+```
+
+Note: For CentOS, the default library path for libva is "/usr/local/lib". It may cause "libva not found" error for MediaSDK build. You may need to add --libdir=/usr/lib64" option when running "autogen.sh".
+
+```
+./autogen.sh --libdir=/usr/lib64
+```
+
