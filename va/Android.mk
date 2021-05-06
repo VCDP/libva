@@ -102,7 +102,7 @@ LOCAL_EXPORT_C_INCLUDE_DIRS := \
 	$(intermediates) \
 	$(LOCAL_C_INCLUDES)
 
-DST := $(LOCAL_PATH)/va_version.h
+DST := $(intermediates)/va/va_version.h
 SCRIPT := $(LOCAL_PATH)/../build/gen_version.sh
 PARAM1 := $(LOCAL_PATH)/../
 PARAM2 := $(LOCAL_PATH)/va_version.h.in
